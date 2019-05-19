@@ -56,18 +56,31 @@ function makeTransaction() {
 
         .then(answers => {
 
-            connection.query('UPDATE products SET stock_quantity = stock_quantity -' + answers.quantity + ' WHERE item_id = ' + answers.action + ';', function (err, results) {
+           connection.query('SELECT stock_quantity FROM products WHERE item_id = ?', [answers.action], function(err, results){
+                if (err) throw err;
 
-                if (err) console.log(err);
-                displayProducts()
-                console.log('Transaction complete!')
-                connection.end()
-            }
+                var quantityInStock = JSON.stringify(results[0].stock_quantity)
+                
+                console.log("There are "+quantityInStock + " in stock!")
+                console.log("You want to purchase " + answers.quantity+".")
+
+                if ( quantityInStock > answers.quantity) {
+    
+                    connection.query('UPDATE products SET stock_quantity = stock_quantity -' + answers.quantity + ' WHERE item_id = ' + answers.action + ';', function (err, results) {
+    
+                        if (err) console.log(err);
+                        displayProducts()
+                        console.log('Transaction complete!')
+                        connection.end()
+                    })
+                } else {
+                    console.log("Insufficient quantity! ")
+                    makeTransaction()
+                }
+            })
 
 
-            )
-        }
-        );
+        });
 
 }
 
