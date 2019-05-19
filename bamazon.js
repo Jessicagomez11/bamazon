@@ -25,27 +25,44 @@ function showItems() {
         if (err) throw err;
         console.log("Welcome to Bamazon! This is a list of our products...")
         console.table(results)
+        makeTransaction()
 
-        inquirer
-            .prompt([
-                {
-                name: 'action',
-                type: 'input',
-                message:"What is the ID of the item you wish to purchase?",
-            },{
-                name: 'action',
-                type: 'input',
-                message:"how many?",
-            }
-        ])
 
-            .then(answers => {
-               console.log(answers.action)
-            });
-        connection.end()
     })
 }
 
+
+
+function makeTransaction() {
+    inquirer
+        .prompt([
+            {
+                name: 'action',
+                type: 'input',
+                message: "What is the ID of the item you wish to purchase?",
+            }, {
+                name: 'quantity',
+                type: 'input',
+                message: "how many?",
+            }
+        ])
+
+        .then(answers => {
+           
+            connection.query('UPDATE products SET stock_quantity = stock_quantity -' + answers.quantity + ' WHERE item_id = ' + answers.action + ';', function (err, results) {
+
+                if (err) console.log(err);
+                console.log('transaction complete')
+                showItems()
+                connection.end()
+            }
+
+
+            )
+        }
+        );
+
+}
 
 
 
