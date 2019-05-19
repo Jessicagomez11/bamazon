@@ -13,12 +13,12 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log('connected as id ' + connection.threadId)
-    showItems()
+    welcome()
 
 })
 
 
-function showItems() {
+function welcome() {
 
     connection.query('SELECT * FROM products', function (err, results) {
 
@@ -31,8 +31,8 @@ function showItems() {
     })
 }
 
-function displayProducts(){
-    connection.query('SELECT * FROM products', function (err, results){
+function displayProducts() {
+    connection.query('SELECT * FROM products', function (err, results) {
         if (err) throw err;
         console.table(results)
     })
@@ -55,12 +55,12 @@ function makeTransaction() {
         ])
 
         .then(answers => {
-           
+
             connection.query('UPDATE products SET stock_quantity = stock_quantity -' + answers.quantity + ' WHERE item_id = ' + answers.action + ';', function (err, results) {
 
                 if (err) console.log(err);
-                console.log('transaction complete')
-               displayProducts()
+                displayProducts()
+                console.log('Transaction complete!')
                 connection.end()
             }
 
