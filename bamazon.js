@@ -23,7 +23,7 @@ function welcome() {
     connection.query('SELECT * FROM products', function (err, results) {
 
         if (err) throw err;
-        console.log("Welcome to Bamazon! This is a list of our products...")
+        console.log("Welcome to Bamazon! ")
         console.table(results)
         makeTransaction()
 
@@ -71,6 +71,13 @@ function makeTransaction() {
                         if (err) console.log(err);
                         displayProducts()
                         console.log('Transaction complete!')
+
+                        connection.query('SELECT price FROM products WHERE item_id = ?', [answers.action], function ( err, priceRes){
+                            if (err) throw err;
+                            var totalCost= JSON.stringify(priceRes[0].price) * answers.quantity
+                            console.log("Your total is $"+ totalCost )
+                        })
+            
                         connection.end()
                     })
                 } else {
