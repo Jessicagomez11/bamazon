@@ -31,6 +31,13 @@ function showItems() {
     })
 }
 
+function displayProducts(){
+    connection.query('SELECT * FROM products', function (err, results){
+        if (err) throw err;
+        console.table(results)
+    })
+}
+
 
 
 function makeTransaction() {
@@ -53,7 +60,7 @@ function makeTransaction() {
 
                 if (err) console.log(err);
                 console.log('transaction complete')
-                showItems()
+               displayProducts()
                 connection.end()
             }
 
@@ -63,6 +70,5 @@ function makeTransaction() {
         );
 
 }
-
 
 
