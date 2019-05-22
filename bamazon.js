@@ -64,7 +64,10 @@ function makeTransaction() {
                 console.log("There are "+quantityInStock + " in stock!")
                 console.log("You want to purchase " + answers.quantity+".")
 
-                if ( quantityInStock > answers.quantity) {
+                var stockQuantity = parseInt(quantityInStock);
+                var userQuantity = parseInt(answers.quantity);
+
+                if ( stockQuantity > userQuantity) {
     
                     connection.query('UPDATE products SET stock_quantity = stock_quantity -' + answers.quantity + ' WHERE item_id = ' + answers.action + ';', function (err, results) {
     
